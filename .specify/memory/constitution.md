@@ -1,50 +1,161 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report - Constitution Update
+Version: 0.0.0 → 1.0.0
+Rationale: Initial constitution ratification for Philippine Bank Status Monitor project
+
+Modified Principles: N/A (initial version)
+Added Sections:
+  - Core Principles (5 principles defined)
+  - Quality Standards
+  - Development Workflow
+  - Governance
+
+Removed Sections: N/A
+
+Templates Requiring Updates:
+  ✅ .specify/templates/plan-template.md - verified Constitution Check section exists
+  ✅ .specify/templates/spec-template.md - verified requirements alignment
+  ✅ .specify/templates/tasks-template.md - verified task categorization aligns
+  ⚠ CLAUDE.md - references incorrect path (specs/002 vs 001), manual fix recommended
+
+Follow-up TODOs: None
+-->
+
+# Philippine Bank Status Monitor Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Reliability First (NON-NEGOTIABLE)
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+The monitoring system MUST be more reliable than the services it monitors. System downtime or inaccuracy undermines user trust and defeats the core purpose.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+**Requirements**:
+- Circuit breaker MUST halt checks at 96% of Cloudflare limits (4% safety buffer)
+- Health check timeouts MUST be configurable with retry logic
+- Stale data MUST be clearly marked with last-updated timestamps
+- System MUST gracefully degrade when rate-limited (display last known status)
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+**Rationale**: Users rely on this dashboard during bank outages. If the dashboard itself is unreliable, users cannot distinguish between actual bank issues and monitoring system failures.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### II. Observability (NON-NEGOTIABLE)
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+All health checks, status changes, failures, and rate limit events MUST be logged with structured data. System behavior MUST be traceable and debuggable.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+**Requirements**:
+- Every health check MUST record: timestamp, endpoint, HTTP code, response time, status result
+- Rate limit counters MUST be tracked and persisted (D1 database)
+- Circuit breaker state changes MUST be logged
+- Errors MUST include context (endpoint URL, retry attempt, timeout value)
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+**Rationale**: Troubleshooting false positives/negatives requires detailed audit trails. Users may dispute status accuracy - logs provide evidence.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### III. Test-Driven Development (NON-NEGOTIABLE)
+
+All features MUST follow Red-Green-Refactor: write failing tests → implement to pass → refactor. Test coverage MUST be maintained at 80%+.
+
+**Requirements**:
+- Unit tests for: status calculation logic, circuit breaker thresholds, database queries
+- Integration tests for: API endpoints, D1 database operations, scheduled worker execution
+- E2E tests for: dashboard loading, status display, historical chart rendering
+- Tests MUST run in CI before merge
+
+**Rationale**: Monitoring logic is brittle (edge cases: timeouts, maintenance detection, threshold calculations). Tests catch regressions before they reach production.
+
+### IV. Cost Efficiency
+
+System MUST operate within Cloudflare free tier limits. Architectural decisions MUST prioritize free-tier sustainability over features.
+
+**Requirements**:
+- D1 reads: <10,000/day (circuit breaker enforces this)
+- Worker requests: <100,000/day (circuit breaker enforces this)
+- Cron frequency: 30 minutes minimum (reduces Worker invocations)
+- Historical data retention: 30 days maximum (keeps D1 storage minimal)
+
+**Rationale**: Project sustainability depends on zero infrastructure cost. Exceeding free tier would require paid plans or service shutdown.
+
+### V. Data Accuracy & Transparency
+
+Status data MUST be timely, accurate, and transparent about its freshness and confidence level.
+
+**Requirements**:
+- Timestamps MUST be displayed in user's local timezone
+- Stale data warnings MUST appear when data is >60 minutes old
+- Maintenance status MUST be distinguished from failures
+- Error states MUST explain why status is unknown (timeout vs HTTP error vs rate limit)
+
+**Rationale**: Misleading status information is worse than no information. Users make financial decisions (branch visit vs online banking) based on this data.
+
+## Quality Standards
+
+### Security
+
+- No API keys, secrets, or credentials MUST be committed to git
+- `wrangler.toml` MUST be git-ignored (template-based configuration)
+- Rate limit counters MUST prevent abuse (public dashboard has no auth)
+- CORS policies MUST be explicit (Cloudflare Workers security)
+
+### Performance
+
+- Dashboard load time: <2 seconds (SSR via Nuxt + Cloudflare Workers)
+- Historical query time: <1 second (indexed D1 queries)
+- Auto-refresh interval: 60 seconds (balance freshness vs Worker requests)
+- Health check timeout: 10 seconds max (prevents Worker execution limit issues)
+
+### Code Quality
+
+- TypeScript strict mode MUST be enabled
+- ESLint + Prettier MUST pass before commit
+- No `any` types (use proper type definitions)
+- Immutable data patterns (no in-place mutations)
+
+## Development Workflow
+
+### Feature Development
+
+1. Specification → Clarification → Planning → Tasks (Speckit workflow)
+2. Constitution compliance check MUST run before implementation
+3. TDD cycle: Red (failing test) → Green (passing implementation) → Refactor
+4. Code review MUST verify: test coverage, observability, cost impact
+
+### Git Workflow
+
+- Conventional Commits format: `type(scope): description`
+- GPG-signed commits preferred
+- Feature branches: `{number}-{feature-slug}` (e.g., `001-ph-bank-status`)
+- PR merge requires: tests passing, constitution compliance, review approval
+
+### Quality Gates
+
+- Pre-commit: ESLint, Prettier, TypeScript type checking
+- Pre-merge: Unit tests 80%+, integration tests passing, E2E tests passing
+- Post-merge: Constitution compliance verification, cost impact review
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution supersedes all other development practices. When guidance conflicts, the constitution takes precedence.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+### Amendment Process
+
+1. Propose amendment with rationale (GitHub issue or PR)
+2. Document version bump type (MAJOR/MINOR/PATCH)
+3. Update dependent templates (.specify/templates/*.md)
+4. Get approval from project maintainers
+5. Update constitution with new version and Last Amended date
+
+### Versioning
+
+- **MAJOR**: Backward-incompatible principle removals or redefinitions
+- **MINOR**: New principles added or materially expanded guidance
+- **PATCH**: Clarifications, wording improvements, typo fixes
+
+### Compliance
+
+- All PRs MUST verify compliance against all 5 core principles
+- Constitutional violations MUST be flagged in code review
+- Intentional principle exemptions MUST be documented with justification
+
+### Runtime Guidance
+
+For agent-specific implementation guidance during development, refer to `CLAUDE.md` (or equivalent agent-specific files). The constitution defines *what* must be done; runtime guidance files explain *how* agents should approach implementation.
+
+**Version**: 1.0.0 | **Ratified**: 2026-05-10 | **Last Amended**: 2026-05-10

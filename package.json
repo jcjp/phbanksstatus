@@ -24,6 +24,7 @@
     "@types/node": "^25.6.2",
     "chart.js": "^4.5.1",
     "nuxt": "^4.4.4",
+    "tailwindcss": "^4.3.0",
     "vitest": "^4.1.5",
     "vue-tsc": "^2.1.0",
     "wrangler": "^4.90.0"

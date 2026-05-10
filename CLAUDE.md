@@ -1,5 +1,5 @@
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan:
-specs/002-ph-bank-status/plan.md
+specs/001-ph-bank-status/plan.md
 <!-- SPECKIT END -->
