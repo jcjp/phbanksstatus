@@ -2,53 +2,53 @@ import { describe, it, expect } from 'vitest';
 
 // Mock bank status calculation logic
 function calculateBankStatus(endpoints: Array<{ current_status: string }>): string {
-  const downCount = endpoints.filter(e => e.current_status === 'Down').length;
-  const maintenanceCount = endpoints.filter(e => e.current_status === 'Maintenance').length;
-  
-  if (maintenanceCount > 0) return 'Maintenance';
-  if (downCount === endpoints.length) return 'Down';
-  if (downCount >= 1 && downCount <= 3) return 'Degraded';
-  return 'Up';
+  const downCount = endpoints.filter(e => e.current_status === 'down').length;
+  const maintenanceCount = endpoints.filter(e => e.current_status === 'maintenance').length;
+
+  if (maintenanceCount > 0) return 'maintenance';
+  if (downCount === endpoints.length) return 'down';
+  if (downCount >= 1 && downCount <= 3) return 'degraded';
+  return 'up';
 }
 
 describe('Status Logic', () => {
-  it('should return Up when all endpoints up', () => {
+  it('should return up when all endpoints up', () => {
     const endpoints = [
-      { current_status: 'Up' },
-      { current_status: 'Up' },
-      { current_status: 'Up' },
-      { current_status: 'Up' }
+      { current_status: 'up' },
+      { current_status: 'up' },
+      { current_status: 'up' },
+      { current_status: 'up' }
     ];
-    expect(calculateBankStatus(endpoints)).toBe('Up');
+    expect(calculateBankStatus(endpoints)).toBe('up');
   });
 
-  it('should return Degraded when 1-3 endpoints down', () => {
+  it('should return degraded when 1-3 endpoints down', () => {
     const endpoints = [
-      { current_status: 'Up' },
-      { current_status: 'Down' },
-      { current_status: 'Up' },
-      { current_status: 'Up' }
+      { current_status: 'up' },
+      { current_status: 'down' },
+      { current_status: 'up' },
+      { current_status: 'up' }
     ];
-    expect(calculateBankStatus(endpoints)).toBe('Degraded');
+    expect(calculateBankStatus(endpoints)).toBe('degraded');
   });
 
-  it('should return Down when all endpoints down', () => {
+  it('should return down when all endpoints down', () => {
     const endpoints = [
-      { current_status: 'Down' },
-      { current_status: 'Down' },
-      { current_status: 'Down' },
-      { current_status: 'Down' }
+      { current_status: 'down' },
+      { current_status: 'down' },
+      { current_status: 'down' },
+      { current_status: 'down' }
     ];
-    expect(calculateBankStatus(endpoints)).toBe('Down');
+    expect(calculateBankStatus(endpoints)).toBe('down');
   });
 
-  it('should return Maintenance when any endpoint in maintenance', () => {
+  it('should return maintenance when any endpoint in maintenance', () => {
     const endpoints = [
-      { current_status: 'Up' },
-      { current_status: 'Maintenance' },
-      { current_status: 'Up' },
-      { current_status: 'Up' }
+      { current_status: 'up' },
+      { current_status: 'maintenance' },
+      { current_status: 'up' },
+      { current_status: 'up' }
     ];
-    expect(calculateBankStatus(endpoints)).toBe('Maintenance');
+    expect(calculateBankStatus(endpoints)).toBe('maintenance');
   });
 });

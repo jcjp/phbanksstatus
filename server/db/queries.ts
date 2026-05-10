@@ -1,5 +1,5 @@
 import type { D1Database } from '@cloudflare/workers-types'
-import type { Bank, Endpoint, EndpointStatus, StatusCheckResult, StatusHistoryRecord, BankStatus, ServiceStatus } from '~/types/status'
+import type { Bank, EndpointStatus, StatusCheckResult, StatusHistoryRecord, BankStatus, ServiceStatus } from '~/types/status'
 
 /**
  * Get current status for all banks with their endpoints
@@ -97,7 +97,10 @@ export async function getHistoricalData(
   const timelineMap = new Map<string, any>()
 
   checks.forEach((check: any) => {
-    const timestamp = check.checked_at
+    // Truncate to minute to group checks from same run
+    const fullTimestamp = check.checked_at
+    const timestamp = fullTimestamp.substring(0, 16) + ':00.000Z' // YYYY-MM-DDTHH:MM:00.000Z
+
     if (!timelineMap.has(timestamp)) {
       timelineMap.set(timestamp, {
         timestamp,

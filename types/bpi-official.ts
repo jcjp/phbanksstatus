@@ -1,4 +1,4 @@
-export type BPISystemStatus = 'Operational' | 'Degraded' | 'Reduced Availability' | 'Temporarily Unavailable'
+export type BPISystemStatus = 'Operational' | 'Degraded' | 'Reduced Availability' | 'Temporarily Unavailable' | 'Unknown'
 
 export interface BPISystem {
   id: number
@@ -11,4 +11,5 @@ export interface BPISystem {
 export interface BPIOfficialStatusResponse {
   systems: BPISystem[]
   lastUpdated: string
+  error?: string
 }

@@ -86,12 +86,19 @@ export default defineEventHandler(async (): Promise<BPIOfficialStatusResponse> =
       lastUpdated: new Date().toISOString()
     }
   } catch (error) {
-    console.error('Error fetching BPI official status (using mock data in dev):', error)
+    console.error('Error fetching BPI official status:', error)
 
-    // Return mock data in development when SSL cert fails
+    // Return error status instead of misleading mock data
+    const errorSystems: BPISystem[] = mockSystems.map(system => ({
+      ...system,
+      status: 'Unknown',
+      description: 'Unable to fetch current status from BPI API'
+    }))
+
     return {
-      systems: mockSystems,
-      lastUpdated: new Date().toISOString()
+      systems: errorSystems,
+      lastUpdated: new Date().toISOString(),
+      error: 'Failed to fetch BPI status data'
     }
   }
 })
