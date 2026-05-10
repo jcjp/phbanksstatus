@@ -67,9 +67,7 @@ npx wrangler d1 create phbanksstatus
 4. Update `wrangler.toml` with your database ID:
 ```toml
 [[d1_databases]]
-binding = "DB"
-database_name = "phbanksstatus"
-database_id = "YOUR_DATABASE_ID_HERE"
+...
 ```
 
 5. Initialize the database schema:
