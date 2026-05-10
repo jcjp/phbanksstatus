@@ -1,8 +1,8 @@
 # Code Review Report: Philippine Bank Status Monitor
 
 **Feature:** Philippine Bank Status Monitor  
-**Branch:** 002-ph-bank-status  
-**Spec:** specs/002-ph-bank-status/spec.md  
+**Branch:** 001-ph-bank-status  
+**Spec:** specs/001-ph-bank-status/spec.md  
 **Date:** 2026-05-10  
 **Reviewer:** Claude Sonnet 4.5 (speckit-spex-gates-review-code)  
 **Review Type:** Spec Compliance Review

@@ -1,6 +1,6 @@
 # Implementation Plan: Philippine Bank Status Monitor
 
-**Branch**: `002-ph-bank-status` | **Date**: 2026-05-10 | **Spec**: [spec.md](./spec.md)
+**Branch**: `001-ph-bank-status` | **Date**: 2026-05-10 | **Spec**: [spec.md](./spec.md)
 
 ## Summary
 

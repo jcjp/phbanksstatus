@@ -1,6 +1,6 @@
 # Feature Specification: Philippine Bank Status Monitor
 
-**Feature Branch**: `002-ph-bank-status`  
+**Feature Branch**: `001-ph-bank-status`  
 **Created**: 2026-05-10  
 **Status**: Draft  
 **Input**: User description: "Philippine Bank Status Monitor - public dashboard for tracking operational status of major PH banks"
