@@ -264,12 +264,47 @@ Returns 30-day historical data for a specific bank.
     },
     {
       "timestamp": "2024-04-03T09:30:00Z",
-      "status": "degraded",
+      "status": "Degraded",
       "affectedServices": ["mobile_api"]
     }
   ]
 }
 \`\`\`
+
+
+### GET /api/bpi-official
+
+Returns real-time status from BPI's official system status page. Displays detailed status for all 9 BPI systems.
+
+**Response:**
+```json
+{
+  "systems": [
+    {
+      "id": 1,
+      "name": "bpi-app",
+      "displayName": "BPI Mobile App",
+      "status": "Operational",
+      "description": "The system is performing as expected with no known issues."
+    },
+    {
+      "id": 2,
+      "name": "bpi-online",
+      "displayName": "BPI Online",
+      "status": "Operational",
+      "description": "The system is performing as expected with no known issues."
+    }
+  ],
+  "lastUpdated": "2024-04-03T10:30:00Z"
+}
+```
+
+**Status values:**
+- `Operational` - System working normally
+- `Degraded` / `Reduced Availability` - Performance issues
+- `Temporarily Unavailable` - System down
+
+**Note:** In development, falls back to mock data when SSL cert validation fails. Works correctly in Cloudflare Workers production environment.
 
 ## Status Determination Logic
 

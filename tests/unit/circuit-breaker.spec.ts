@@ -1,11 +1,7 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { checkCircuitBreaker, incrementCounter, resetCounters } from '../../server/utils/circuit-breaker';
+import { describe, it, expect } from 'vitest';
+import { checkCircuitBreaker } from '../../server/utils/circuit-breaker';
 
 describe('Circuit Breaker', () => {
-  beforeEach(async () => {
-    await resetCounters();
-  });
-
   it('should allow operations below 96% threshold', async () => {
     const mockDb = {
       prepare: () => ({
@@ -17,11 +13,12 @@ describe('Circuit Breaker', () => {
     };
 
     const result = await checkCircuitBreaker(mockDb as any);
-    expect(result.halted).toBe(false);
-    expect(result.reason).toBeNull();
+    expect(result.isActive).toBe(false);
+    expect(result.d1ReadsCount).toBe(5000);
+    expect(result.workerRequestsCount).toBe(5000);
   });
 
-  it('should halt at 96% D1 reads threshold', async () => {
+  it('should activate at 96% D1 reads threshold', async () => {
     const mockDb = {
       prepare: () => ({
         bind: () => ({
@@ -32,18 +29,20 @@ describe('Circuit Breaker', () => {
     };
 
     const result = await checkCircuitBreaker(mockDb as any);
-    expect(result.halted).toBe(true);
-    expect(result.reason).toContain('D1 reads');
+    expect(result.isActive).toBe(true);
+    expect(result.d1ReadsCount).toBe(9700);
   });
 
-  it('should halt at 96% Worker requests threshold', async () => {
+  it('should activate at 96% Worker requests threshold', async () => {
+    let callCount = 0;
     const mockDb = {
       prepare: () => ({
         bind: () => ({
-          first: (name: string) => {
-            if (name === 'd1_reads_daily') return Promise.resolve({ count: 5000 });
-            if (name === 'worker_requests_daily') return Promise.resolve({ count: 97000 });
-            return Promise.resolve({ count: 0 });
+          first: () => {
+            callCount++;
+            // First call for d1_reads, second for worker_requests
+            const count = callCount === 1 ? 5000 : 97000;
+            return Promise.resolve({ count, reset_at: new Date().toISOString() });
           }
         }),
         run: () => Promise.resolve()
@@ -51,7 +50,7 @@ describe('Circuit Breaker', () => {
     };
 
     const result = await checkCircuitBreaker(mockDb as any);
-    expect(result.halted).toBe(true);
-    expect(result.reason).toContain('Worker requests');
+    expect(result.isActive).toBe(true);
+    expect(result.workerRequestsCount).toBe(97000);
   });
 });

@@ -56,7 +56,7 @@ export async function getCurrentStatus(db: D1Database): Promise<Bank[]> {
     // Calculate bank status based on endpoint failures
     const bankStatus = calculateBankStatus(bankEndpoints)
     const lastChecked = bankEndpoints.length > 0
-      ? bankEndpoints[0].lastChecked
+      ? bankEndpoints[0]?.lastChecked ?? new Date().toISOString()
       : new Date().toISOString()
 
     return {
