@@ -38,3 +38,11 @@ dist
 # OS
 .DS_Store
 Thumbs.db
+
+# CodeDB
+.codedb.*
+.codedb.snapshot
+codedb.snapshot
+
+# Cloudflare Wrangler
+wrangler.toml
