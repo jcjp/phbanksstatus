@@ -226,7 +226,7 @@ The circuit breaker activates at 96% of Cloudflare free tier limits:
 Returns current status for all banks.
 
 **Response:**
-\`\`\`json
+```json
 {
   "banks": [
     {
@@ -247,14 +247,14 @@ Returns current status for all banks.
     "resetAt": "2024-04-04T00:00:00Z"
   }
 }
-\`\`\`
+```
 
 ### GET /api/history/:bankSlug
 
 Returns 30-day historical data for a specific bank.
 
 **Response:**
-\`\`\`json
+```json
 {
   "bankSlug": "unionbank",
   "history": [
@@ -269,8 +269,7 @@ Returns 30-day historical data for a specific bank.
     }
   ]
 }
-\`\`\`
-
+```
 
 ### GET /api/bpi-official
 
@@ -305,7 +304,6 @@ Returns real-time status from BPI's official system status page. Displays detail
 - `Temporarily Unavailable` - System down
 
 **Note:** In development, falls back to mock data when SSL cert validation fails. Works correctly in Cloudflare Workers production environment.
-
 ## Status Determination Logic
 
 ### Bank Status
