@@ -1,0 +1,6 @@
+
+# spex: generated/local files
+.claude/skills/
+.claude/settings.local.json
+.specify/.spex-phase
+.specify/.spex-state

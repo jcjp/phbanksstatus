@@ -1,0 +1,34 @@
+{
+  "allowedTools": [
+    {
+      "tool": "Bash",
+      "pattern": ".*"
+    },
+    {
+      "tool": "Read",
+      "pattern": ".*"
+    },
+    {
+      "tool": "Edit",
+      "pattern": ".*"
+    },
+    {
+      "tool": "Write",
+      "pattern": ".*"
+    },
+    {
+      "tool": "mcp__*",
+      "pattern": ".*"
+    }
+  ],
+  "allowedCommands": [
+    {
+      "command": "specify",
+      "pattern": ".*"
+    },
+    {
+      "command": "/home/tcham/.claude/plugins/cache/cc-rhuss-marketplace/spex/*/spex/scripts/*.sh",
+      "pattern": ".*"
+    }
+  ]
+}
