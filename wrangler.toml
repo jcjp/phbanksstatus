@@ -1,0 +1,13 @@
+name = "phbanksstatus"
+compatibility_date = "2024-04-03"
+compatibility_flags = ["nodejs_compat"]
+
+# D1 Database binding
+[[d1_databases]]
+binding = "DB"
+database_name = "phbanksstatus"
+database_id = "" # Will be filled after creating the database
+
+# Scheduled Worker for health checks
+[triggers]
+crons = ["*/30 * * * *"] # Every 30 minutes

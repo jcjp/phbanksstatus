@@ -1,0 +1,33 @@
+{
+  "name": "phbanksstatus",
+  "version": "1.0.0",
+  "description": "Philippine Bank Status Monitor - Public dashboard for tracking operational status of major PH banks",
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "test": "vitest",
+    "test:e2e": "playwright test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@11.0.9",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260509.1",
+    "@nuxt/test-utils": "^4.0.3",
+    "@nuxt/ui": "^4.7.1",
+    "@playwright/test": "^1.59.1",
+    "chart.js": "^4.5.1",
+    "nuxt": "^4.4.4",
+    "vitest": "^4.1.5",
+    "wrangler": "^4.90.0"
+  },
+  "dependencies": {
+    "happy-dom": "^20.9.0",
+    "vitest-environment-nuxt": "^2.0.0"
+  }
+}
