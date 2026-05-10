@@ -14,7 +14,7 @@ const CIRCUIT_BREAKER_THRESHOLD = 0.96
  */
 export async function checkCircuitBreaker(db: D1Database): Promise<CircuitBreakerStatus> {
   const now = new Date()
-  const today = now.toISOString().split('T')[0] // YYYY-MM-DD
+  const today = now.toISOString().split('T')[0]! // YYYY-MM-DD
 
   // Get or create counters for today
   const d1Counter = await getOrCreateCounter(db, 'd1_reads', today)
@@ -44,7 +44,7 @@ export async function incrementCounter(
   amount: number = 1
 ): Promise<void> {
   const now = new Date()
-  const today = now.toISOString().split('T')[0]
+  const today = now.toISOString().split('T')[0]!
 
   await db
     .prepare(
@@ -66,7 +66,7 @@ async function getOrCreateCounter(
 ): Promise<{ count: number; resetAt: string }> {
   const tomorrow = new Date(today)
   tomorrow.setDate(tomorrow.getDate() + 1)
-  const resetAt = tomorrow.toISOString().split('T')[0]
+  const resetAt = tomorrow.toISOString().split('T')[0]!
 
   // Try to get existing counter
   const existing = await db

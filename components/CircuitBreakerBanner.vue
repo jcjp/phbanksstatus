@@ -1,7 +1,7 @@
 <template>
   <UAlert
     v-if="circuitBreaker.isActive"
-    color="orange"
+    color="warning"
     variant="soft"
     icon="i-heroicons-exclamation-triangle"
     title="Status checks paused due to rate limits"

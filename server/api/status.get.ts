@@ -8,11 +8,21 @@ import { checkCircuitBreaker, incrementCounter } from '../utils/circuit-breaker'
 export default defineEventHandler(async (event) => {
   const db = event.context.cloudflare?.env?.DB
 
+  // Use mock data in development when DB is not available
   if (!db) {
-    throw createError({
-      statusCode: 500,
-      message: 'Database not available'
-    })
+    const { mockBanks } = await import('../utils/mock-data')
+    return {
+      banks: mockBanks,
+      circuitBreaker: {
+        isActive: false,
+        d1ReadsCount: 0,
+        workerRequestsCount: 0,
+        d1ReadsLimit: 10000,
+        workerRequestsLimit: 100000,
+        resetAt: new Date().toISOString()
+      },
+      lastUpdate: new Date().toISOString()
+    }
   }
 
   try {
@@ -28,7 +38,8 @@ export default defineEventHandler(async (event) => {
 
     return {
       banks,
-      circuitBreaker: circuitStatus
+      circuitBreaker: circuitStatus,
+      lastUpdate: new Date().toISOString()
     }
   } catch (error: any) {
     console.error('Error fetching status:', error)

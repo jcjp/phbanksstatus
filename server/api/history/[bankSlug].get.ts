@@ -9,13 +9,6 @@ export default defineEventHandler(async (event) => {
   const db = event.context.cloudflare?.env?.DB
   const bankSlug = getRouterParam(event, 'bankSlug')
 
-  if (!db) {
-    throw createError({
-      statusCode: 500,
-      message: 'Database not available'
-    })
-  }
-
   if (!bankSlug) {
     throw createError({
       statusCode: 400,
@@ -23,11 +16,19 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  // Use mock data in development when DB is not available
+  if (!db) {
+    return {
+      bankSlug,
+      history: generateMockHistory(bankSlug)
+    }
+  }
+
   try {
     const history = await getHistoricalData(db, bankSlug)
 
     // Increment counters
-    await incrementCounter(db, 'd1_reads', 3) // Approximate read count
+    await incrementCounter(db, 'd1_reads', 3)
     await incrementCounter(db, 'worker_requests', 1)
 
     return {
@@ -42,3 +43,22 @@ export default defineEventHandler(async (event) => {
     })
   }
 })
+
+function generateMockHistory(bankSlug: string) {
+  const history = []
+  const now = new Date()
+
+  // Generate 30 days of mock data (all up)
+  for (let i = 29; i >= 0; i--) {
+    const date = new Date(now)
+    date.setDate(date.getDate() - i)
+    const dateStr = date.toISOString().split('T')[0]
+
+    history.push({
+      date: dateStr,
+      status: 'up'
+    })
+  }
+
+  return history
+}
