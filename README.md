@@ -41,52 +41,52 @@ Public dashboard for tracking operational status of major Philippine banks' digi
 ### Installation
 
 1. Clone the repository:
-\`\`\`bash
+```bash
 git clone <repository-url>
 cd phbanksstatus
-\`\`\`
+```
 
 2. Install dependencies:
-\`\`\`bash
+```bash
 npm install
 # or
 pnpm install
 # or
 vp install
-\`\`\`
+```
 
 3. Create D1 database:
-\`\`\`bash
+```bash
 # For local development
 npx wrangler d1 create phbanksstatus-local
 
 # For production
 npx wrangler d1 create phbanksstatus
-\`\`\`
+```
 
 4. Update `wrangler.toml` with your database ID:
-\`\`\`toml
+```toml
 [[d1_databases]]
 binding = "DB"
 database_name = "phbanksstatus"
 database_id = "YOUR_DATABASE_ID_HERE"
-\`\`\`
+```
 
 5. Initialize the database schema:
-\`\`\`bash
+```bash
 # Local
 npx wrangler d1 execute phbanksstatus-local --file=./server/db/schema.sql
 
 # Production
 npx wrangler d1 execute phbanksstatus --file=./server/db/schema.sql
-\`\`\`
+```
 
 6. Run development server:
-\`\`\`bash
+```bash
 npm run dev
 # or
 vp dev
-\`\`\`
+```
 
 The application will be available at `http://localhost:3000`
 
@@ -94,45 +94,45 @@ The application will be available at `http://localhost:3000`
 
 ### Query D1 Database
 
-\`\`\`bash
+```bash
 # Local
 npx wrangler d1 execute phbanksstatus-local --command="SELECT * FROM banks"
 
 # Production
 npx wrangler d1 execute phbanksstatus --command="SELECT * FROM banks"
-\`\`\`
+```
 
 ### Backup Database
 
-\`\`\`bash
+```bash
 npx wrangler d1 backup create phbanksstatus
-\`\`\`
+```
 
 ### Manual Health Check Trigger
 
 The scheduled worker runs every 30 minutes automatically. For manual testing:
 
-\`\`\`bash
+```bash
 npx wrangler dev --test-scheduled
-\`\`\`
+```
 
 ## Testing
 
 ### Unit Tests
 
-\`\`\`bash
+```bash
 npm run test
 # or
 vp test
-\`\`\`
+```
 
 ### E2E Tests
 
-\`\`\`bash
+```bash
 npm run test:e2e
 # or
 vp test:e2e
-\`\`\`
+```
 
 ### Test Coverage
 
@@ -142,11 +142,11 @@ Coverage threshold is set to 80% for all metrics (lines, functions, branches, st
 
 ### Build for Production
 
-\`\`\`bash
+```bash
 npm run build
 # or
 vp build
-\`\`\`
+```
 
 ### Deploy to Cloudflare Pages
 
@@ -157,15 +157,15 @@ vp build
    - **Environment variables**: Set up D1 binding
 
 3. Set up Cron Trigger:
-\`\`\`bash
+```bash
 npx wrangler deploy
-\`\`\`
+```
 
 The cron trigger is configured in `wrangler.toml` to run every 30 minutes.
 
 ## Project Structure
 
-\`\`\`
+```
 phbanksstatus/
 ├── server/
 │   ├── api/              # API routes
@@ -197,7 +197,7 @@ phbanksstatus/
 ├── wrangler.toml
 ├── vitest.config.ts
 └── playwright.config.ts
-\`\`\`
+```
 
 ## Configuration
 
