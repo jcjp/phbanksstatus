@@ -51,15 +51,15 @@ const statusLabel = computed(() => {
 const badgeColor = computed(() => {
   switch (props.bank.status) {
     case 'up':
-      return 'green'
+      return 'success'
     case 'degraded':
-      return 'yellow'
+      return 'warning'
     case 'down':
-      return 'red'
+      return 'error'
     case 'maintenance':
-      return 'blue'
+      return 'info'
     default:
-      return 'gray'
+      return 'neutral'
   }
 })
 

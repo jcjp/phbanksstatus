@@ -6,7 +6,7 @@ compatibility_flags = ["nodejs_compat"]
 [[d1_databases]]
 binding = "DB"
 database_name = "phbanksstatus"
-database_id = "" # Will be filled after creating the database
+database_id = "f665464d-31df-455c-8090-9e86d7f234c2"
 
 # Scheduled Worker for health checks
 [triggers]

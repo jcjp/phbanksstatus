@@ -87,6 +87,8 @@ function initChart() {
             label: (context) => {
               const index = context.dataIndex
               const record = props.history[index]
+              if (!record) return ''
+
               const statusLabel = record.status.charAt(0).toUpperCase() + record.status.slice(1)
               let tooltip = `Status: ${statusLabel}`
 
